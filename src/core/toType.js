@@ -1,11 +1,12 @@
 import class2type from "../var/class2type.js";
+
+// Object.prototype.toString.call();
 import toString from "../var/toString.js";
 
 function toType( obj ) {
 	if ( obj == null ) {
 		return obj + "";
 	}
-
 	return typeof obj === "object" ?
 		class2type[ toString.call( obj ) ] || "object" :
 		typeof obj;

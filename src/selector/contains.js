@@ -9,6 +9,7 @@ jQuery.contains = function( a, b ) {
 
 		// Support: IE 9 - 11+
 		// IE doesn't have `contains` on SVG.
+		//////// node.contains(node)判断是否包含，IE doesn't have `contains` on SVG.使用a.compareDocumentPosition && a.compareDocumentPosition( bup ) & 16
 		adown.contains ?
 			adown.contains( bup ) :
 			a.compareDocumentPosition && a.compareDocumentPosition( bup ) & 16

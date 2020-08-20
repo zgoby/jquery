@@ -22,3 +22,6 @@ npm-debug.log*
 
 /test/data/core/jquery-iterability-transpiled.js
 /test/data/qunit-fixture.js
+
+# user add
+/demo.*

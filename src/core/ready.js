@@ -73,6 +73,6 @@ if ( document.readyState !== "loading" ) {
 	// Use the handy event callback
 	document.addEventListener( "DOMContentLoaded", completed );
 
-	// A fallback to window.onload, that will always work
+	// A fallback listen window.onload that will always work to promise "completed" to be ok
 	window.addEventListener( "load", completed );
 }

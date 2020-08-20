@@ -7,6 +7,8 @@ import isIE from "../var/isIE.js";
 import "../selector.js";
 
 jQuery.fn.extend( {
+
+	// 原型链的attr方法
 	attr: function( name, value ) {
 		return access( this, jQuery.attr, name, value, arguments.length > 1 );
 	},
@@ -23,13 +25,15 @@ jQuery.extend( {
 		var ret, hooks,
 			nType = elem.nodeType;
 
-		// Don't get/set attributes on text, comment and attribute nodes
+		//////// Don't get/set attributes on text, comment and attribute nodes-nodeType=3|8|2
 		if ( nType === 3 || nType === 8 || nType === 2 ) {
 			return;
 		}
 
-		// Fallback to prop when attributes are not supported
+		// Fallback to prop when attributes are not supported，可能只有id8前不支持此属性
 		if ( typeof elem.getAttribute === "undefined" ) {
+
+			// jQuery.prop in src/attribute/prop
 			return jQuery.prop( elem, name, value );
 		}
 

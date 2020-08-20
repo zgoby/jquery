@@ -11,6 +11,8 @@ import setGlobalEval from "./setGlobalEval.js";
 var rhtml = /<|&#?\w+;/;
 
 function buildFragment( elems, context, scripts, selection, ignored ) {
+
+	//////// DocumentFragment，文档片段接口，一个没有父对象的最小文档对象。它被作为一个轻量版的 Document 使用，就像标准的document一样，存储由节点（nodes）组成的文档结构。与document相比，最大的区别是DocumentFragment 不是真实 DOM 树的一部分，它的变化不会触发 DOM 树的重新渲染，且不会导致性能等问题。So it is a batching solution
 	var elem, tmp, tag, wrap, attached, j,
 		fragment = context.createDocumentFragment(),
 		nodes = [],
@@ -44,6 +46,7 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 					tmp = tmp.appendChild( context.createElement( wrap[ j ] ) );
 				}
 
+				//////// string -> dom,which is是innerHTML直接接受string的标签
 				tmp.innerHTML = jQuery.htmlPrefilter( elem );
 
 				jQuery.merge( nodes, tmp.childNodes );
@@ -85,6 +88,8 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 		if ( scripts ) {
 			j = 0;
 			while ( ( elem = tmp[ j++ ] ) ) {
+
+				//////// script标签有type属性
 				if ( rscriptType.test( elem.type || "" ) ) {
 					scripts.push( elem );
 				}

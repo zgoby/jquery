@@ -73,9 +73,13 @@ var i,
 	rwhitespace = new RegExp( whitespace + "+", "g" ),
 	rtrim = new RegExp( "^" + whitespace + "+|((?:^|[^\\\\])(?:\\\\.)*)" + whitespace + "+$", "g" ),
 
+	// /^ *, */
 	rcomma = new RegExp( "^" + whitespace + "*," + whitespace + "*" ),
 	rcombinators = new RegExp( "^" + whitespace + "*([>+~]|" + whitespace + ")" +
 		whitespace + "*" ),
+
+	// /^ *([>+~]| ) */
+	// / |>/
 	rdescend = new RegExp( whitespace + "|>" ),
 
 	rpseudo = new RegExp( pseudos ),
@@ -159,6 +163,7 @@ function find( selector, context, results, seed ) {
 	results = results || [];
 
 	// Return early from calls with invalid selector or context
+	//////// find中使用nodeType判断
 	if ( typeof selector !== "string" || !selector ||
 		nodeType !== 1 && nodeType !== 9 && nodeType !== 11 ) {
 
@@ -172,8 +177,10 @@ function find( selector, context, results, seed ) {
 
 		if ( documentIsHTML ) {
 
+			//////// /^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/匹配单个的，如ID，tag and class，用getElementBy...处理；嵌套的并列的就用querySelectorAll处理
 			// If the selector is sufficiently simple, try using a "get*By*" DOM method
 			// (excepting DocumentFragment context, where the methods don't exist)
+			//////// 1. 使用正则的（）形成的匹配的位置来区分自字符串符合哪个？！
 			if ( nodeType !== 11 && ( match = rquickExpr.exec( selector ) ) ) {
 
 				// ID selector
@@ -231,6 +238,7 @@ function find( selector, context, results, seed ) {
 
 					// We can use :scope instead of the ID hack if the browser
 					// supports it & if we're not changing the context.
+					//////// `selected.querySelectorAll(':scope .outer .inner')`，:scope 伪类符合预期的行为，只匹配基本元素后代的选择器（最新版浏览器是没这个问题的）。不支持的可以使用id代替，大量元素使用相同id
 					if ( newContext !== context || !support.scope ) {
 
 						// Capture the context ID, setting it first if necessary
@@ -415,6 +423,8 @@ function testContext( context ) {
  * @param {Element|Object} [node] An element or document object to use to set the document
  */
 function setDocument( node ) {
+
+	//////// document的ownerDocument不存在
 	var subWindow,
 		doc = node ? node.ownerDocument || node : preferredDoc;
 
@@ -1044,6 +1054,7 @@ function setFilters() {}
 setFilters.prototype = Expr.filters = Expr.pseudos;
 Expr.setFilters = new setFilters();
 
+////////
 function tokenize( selector, parseOnly ) {
 	var matched, match, tokens, type,
 		soFar, groups, preFilters,

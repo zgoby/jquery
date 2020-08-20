@@ -108,11 +108,5 @@
     ],
     "markerPattern": "^((clos|fix|resolv)(e[sd]|ing))|^(refs?)",
     "ticketPattern": "^((Closes|Fixes) ([a-zA-Z]{2,}-)[0-9]+)|^(Refs? [^#])"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "node node_modules/commitplease",
-      "pre-commit": "grunt lint:newer qunit_fixture"
-    }
   }
 }

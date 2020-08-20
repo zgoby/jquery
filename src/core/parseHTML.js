@@ -7,6 +7,7 @@ import buildFragment from "../manipulation/buildFragment.js";
 // context (optional): If specified, the fragment will be created in this context,
 // defaults to document
 // keepScripts (optional): If true, will include scripts passed in the html string
+//////// 使用documentFragment来batch
 jQuery.parseHTML = function( data, context, keepScripts ) {
 	if ( typeof data !== "string" ) {
 		return [];
@@ -22,6 +23,7 @@ jQuery.parseHTML = function( data, context, keepScripts ) {
 
 		// Stop scripts or inline event handlers from being executed immediately
 		// by using document.implementation
+		// 这里是create a new document
 		context = document.implementation.createHTMLDocument( "" );
 
 		// Set the base href for the created document

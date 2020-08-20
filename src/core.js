@@ -1,5 +1,7 @@
+// []
 import arr from "./var/arr.js";
 import getProto from "./var/getProto.js";
+// [].slice
 import slice from "./var/slice.js";
 import flat from "./var/flat.js";
 import push from "./var/push.js";
@@ -31,6 +33,7 @@ jQuery.fn = jQuery.prototype = {
 	// The current version of jQuery being used
 	jquery: version,
 
+	//构造函数和导出函数都是jQuery
 	constructor: jQuery,
 
 	// The default length of a jQuery object is 0
@@ -113,6 +116,10 @@ jQuery.fn = jQuery.prototype = {
 	}
 };
 
+// jQuery扩展方法，添加静态方法与添加成员函数
+// $.extend( target [, object1 ] [, objectN ] )
+// $.extend( [deep ], target, object1 [, objectN ] )
+// $.fn.extend(object)
 jQuery.extend = jQuery.fn.extend = function() {
 	var options, name, src, copy, copyIsArray, clone,
 		target = arguments[ 0 ] || {},
@@ -317,6 +324,7 @@ jQuery.extend( {
 		return arr == null ? -1 : indexOf.call( arr, elem, i );
 	},
 
+	//////// isXMLDoc？document的documentElement.nodeName是HTML||document.namespaceURI
 	isXMLDoc: function( elem ) {
 		var namespace = elem.namespaceURI,
 			docElem = ( elem.ownerDocument || elem ).documentElement;
