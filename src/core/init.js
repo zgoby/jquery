@@ -30,7 +30,8 @@ var rootjQuery,
 	 * 2. 匹配#id（getElementById）
 	 * 3. 匹配css选择器
 	 * -- 如果传入的是dom直接转化未jquery对象 {index: dom, length: n}
-	 * -- $(function(){}) 保证dom挂载，
+	 * -- $(function(){}) 保证dom挂载，实现：基于document.readyState,document.load,document.DOMContentLoaded 监听，对应completed函数处理，处理过程
+	 * -- 触发resolveWith(),是一个订阅模式，多函数，以queue中context,args执行。这种方式的处理是做到多个$(function(){})保证执行，形成执行list也需要工厂（含代注册功能）
 	 */////////
 	init = jQuery.fn.init = function( selector, context, root ) {
 		var match, elem;

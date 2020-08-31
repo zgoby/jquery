@@ -226,6 +226,7 @@ jQuery.extend( {
 						};
 					}
 
+					// this return the deferred's promise
 					return jQuery.Deferred( function( newDefer ) {
 
 						// progress_handlers.add( ... )

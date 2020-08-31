@@ -11,6 +11,7 @@ function createOptions( options ) {
 	return object;
 }
 
+// so what is this func ? execute func in list used by fire queue！and there are some options
 /*
  * Create a callback list using the following parameters:
  *

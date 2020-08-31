@@ -63,6 +63,7 @@ function completed() {
 
 // Catch cases where $(document).ready() is called
 // after the browser event has already occurred.
+//////// document.readyState: loading, interactive, complete;
 if ( document.readyState !== "loading" ) {
 
 	// Handle it asynchronously to allow scripts the opportunity to delay ready
