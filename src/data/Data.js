@@ -3,7 +3,7 @@ import camelCase from "../core/camelCase.js";
 import rnothtmlwhite from "../var/rnothtmlwhite.js";
 import acceptData from "./var/acceptData.js";
 
-//////// this data caches is in the dom's prototype!
+//////// this data caches in the dom's prototype!传入obj读写obj上的cache单元
 function Data() {
 	this.expando = jQuery.expando + Data.uid++;
 }
@@ -12,6 +12,8 @@ Data.uid = 1;
 
 Data.prototype = {
 
+	// 获取传入元素的"jQuery" + ( version + Math.random() ).replace( /\D/g, "" )+Data.uid的value，即{events: {data,guid,handler,namespace,needsContext,origType,selector,type}[ArrayLike], handle?}
+	// 没有值就赋予个no prototype对象
 	cache: function( owner ) {
 
 		// Check if the owner object already has a cache
@@ -45,6 +47,8 @@ Data.prototype = {
 
 		return value;
 	},
+
+	// set owner,接单键值，接受
 	set: function( owner, data, value ) {
 		var prop,
 			cache = this.cache( owner );
@@ -64,6 +68,8 @@ Data.prototype = {
 		}
 		return cache;
 	},
+
+	// get 元素整体或者key对应的值
 	get: function( owner, key ) {
 		return key === undefined ?
 			this.cache( owner ) :
@@ -71,6 +77,8 @@ Data.prototype = {
 			// Always use camelCase key (gh-2257)
 			owner[ this.expando ] && owner[ this.expando ][ camelCase( key ) ];
 	},
+
+	// 自动区分get，set
 	access: function( owner, key, value ) {
 
 		// In cases where either:
@@ -102,6 +110,8 @@ Data.prototype = {
 		// return the expected data based on which path was taken[*]
 		return value !== undefined ? value : key;
 	},
+
+	// 无key删全部
 	remove: function( owner, key ) {
 		var i,
 			cache = owner[ this.expando ];
@@ -123,6 +133,7 @@ Data.prototype = {
 
 				// If a key with the spaces exists, use it.
 				// Otherwise, create an array by matching non-whitespace
+				//////// 字符串regExp的几个方法，match以parameter分割成数组
 				key = key in cache ?
 					[ key ] :
 					( key.match( rnothtmlwhite ) || [] );
@@ -149,6 +160,8 @@ Data.prototype = {
 			}
 		}
 	},
+
+	// owner[this.expando]是否为空
 	hasData: function( owner ) {
 		var cache = owner[ this.expando ];
 		return cache !== undefined && !jQuery.isEmptyObject( cache );

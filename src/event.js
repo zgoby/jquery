@@ -47,6 +47,8 @@ function on( elem, types, selector, data, fn, one ) {
 			data = data || selector;
 			selector = undefined;
 		}
+
+		//  * - type可以作为type: handlerFunc键值对
 		for ( type in types ) {
 			on( elem, type, selector, data, types[ type ], one );
 		}
@@ -101,6 +103,10 @@ function on( elem, types, selector, data, fn, one ) {
  */
 jQuery.event = {
 
+	//////// 事件绑定on即add: function( elem, types, handler, data, selector )： elem,types必须是正常的，这是功能的关键要素;
+	//////// steps:1.判断元素type，处理handler和match selector；2.dom事件是通过addEventListener添加，执行是固定的触发函数，再触发events里的绑定函数。why？：可以介入中间层可以包装用户的cb，实现既定的返回值或者其他的操作！3.中间很多处理方法了，比如所以事件全部绑定到on上面；如果事件匹配到special再引入一层包装去处理；特殊的事件还要leverage到原声事件。所以delegate怎么做的？？？？就是把事件绑定在已知元素已存在元素，然后再根据target得出可执行cb[]
+	//////// 绑定在dom上的events处理函数list中的guid递增的作为标示;5.执行传入的cb时传出的是包装event，内含originalEvent和一些需要操作的属性与方法！,原生方法也做了一些额外的包装，所以jquery event的基本思路就是基于原生丰富原生
+	//////// off就是根据各种标示筛选加删除
 	add: function( elem, types, handler, data, selector ) {
 
 		var handleObjIn, eventHandle, tmp,
@@ -108,7 +114,7 @@ jQuery.event = {
 			special, handlers, type, namespaces, origType,
 			elemData = dataPriv.get( elem );
 
-		// Only attach events to objects that accept data
+		// Only attach events to objects that accept data不是nodeType1，9结束
 		if ( !acceptData( elem ) ) {
 			return;
 		}
@@ -122,6 +128,7 @@ jQuery.event = {
 
 		// Ensure that invalid selectors throw exceptions at attach time
 		// Evaluate against documentElement in case elem is a non-element node (e.g., document)
+		// how match ？？？选择器
 		if ( selector ) {
 			jQuery.find.matchesSelector( documentElement, selector );
 		}
@@ -185,6 +192,7 @@ jQuery.event = {
 				handlers.delegateCount = 0;
 
 				// Only use addEventListener if the special events handler returns false
+				// 这里lervage是在干嘛
 				if ( !special.setup ||
 					special.setup.call( elem, data, namespaces, eventHandle ) === false ) {
 
@@ -194,6 +202,7 @@ jQuery.event = {
 				}
 			}
 
+			// 这里是在干嘛？
 			if ( special.add ) {
 				special.add.call( elem, handleObj );
 
@@ -240,6 +249,7 @@ jQuery.event = {
 				continue;
 			}
 
+			// 特殊情况的特殊获取真实事件
 			special = jQuery.event.special[ type ] || {};
 			type = ( selector ? special.delegateType : special.bindType ) || type;
 			handlers = events[ type ] || [];
@@ -354,6 +364,7 @@ jQuery.event = {
 		return event.result;
 	},
 
+	// 把events里的事件回到函数归总一下
 	handlers: function( event, handlers ) {
 		var i, handleObj, sel, matchedHandlers, matchedSelectors,
 			handlerQueue = [],
@@ -408,6 +419,7 @@ jQuery.event = {
 		return handlerQueue;
 	},
 
+	// 设置jQuery.Event.prototype属性的方法
 	addProp: function( name, hook ) {
 		Object.defineProperty( jQuery.Event.prototype, name, {
 			enumerable: true,
@@ -514,6 +526,7 @@ jQuery.event = {
 // synthetic events by interrupting progress until reinvoked in response to
 // *native* events that it fires directly, ensuring that state changes have
 // already occurred before other listeners are invoked.
+//////// 有些事件比如checkbox的click事件，我们需要让原生事件去stopImmediatePropagation其他的绑定，来包装状态更改
 function leverageNative( el, type, expectSync ) {
 
 	// Missing expectSync indicates a trigger call, which must force setup through jQuery.event.add
@@ -591,6 +604,7 @@ function leverageNative( el, type, expectSync ) {
 				} );
 
 				// Abort handling of the native event
+				//////// event.stopImmediatePropagation()阻止当前元素相同事件监听的剩余处理函数
 				event.stopImmediatePropagation();
 			}
 		}
@@ -608,6 +622,7 @@ jQuery.removeEvent = function( elem, type, handle ) {
 jQuery.Event = function( src, props ) {
 
 	// Allow instantiation without the 'new' keyword
+	//////// if ( !( this instanceof jQuery.Event ) ) {return new jQuery.Event( src, props ); }允许不使用new的包装
 	if ( !( this instanceof jQuery.Event ) ) {
 		return new jQuery.Event( src, props );
 	}
@@ -624,6 +639,7 @@ jQuery.Event = function( src, props ) {
 			returnFalse;
 
 		// Create target properties
+		//////// target是当前的事件的dom，处理事件的冒泡和捕获时和currentTarget不同，relatedTarget是mouse事件特有的关联目标form target into relatedTarget
 		this.target = src.target;
 		this.currentTarget = src.currentTarget;
 		this.relatedTarget = src.relatedTarget;

@@ -1,3 +1,4 @@
+// -转驼峰
 // Matches dashed string for camelizing
 var rdashAlpha = /-([a-z])/g;
 
