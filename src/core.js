@@ -1,6 +1,7 @@
 // []
 import arr from "./var/arr.js";
 import getProto from "./var/getProto.js";
+
 // [].slice
 import slice from "./var/slice.js";
 import flat from "./var/flat.js";

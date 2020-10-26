@@ -283,7 +283,7 @@ jQuery.extend( {
 			// promise.fail = list.add
 			promise[ tuple[ 1 ] ] = list.add;
 
-			// Handle state
+			// Handle state 2，3的done，fail添加state改变函数，他们的2，3函数的disable，0的2，3的锁定
 			if ( stateString ) {
 				list.add(
 					function() {

@@ -27,6 +27,7 @@ function getDefaultDisplay( elem ) {
 	return display;
 }
 
+//////// hide show通过css控制并记录上次display到elem.display
 function showHide( elements, show ) {
 	var display, elem,
 		values = [],

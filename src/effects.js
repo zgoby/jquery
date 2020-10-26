@@ -22,6 +22,7 @@ var
 	rfxtypes = /^(?:toggle|show|hide)$/,
 	rrun = /queueHooks$/;
 
+// 循环执行tick
 function schedule() {
 	if ( inProgress ) {
 		if ( document.hidden === false && window.requestAnimationFrame ) {
@@ -63,12 +64,14 @@ function genFx( type, includeWidth ) {
 	return attrs;
 }
 
+// 											v,    k,   animation
 function createTween( value, prop, animation ) {
 	var tween,
 		collection = ( Animation.tweeners[ prop ] || [] ).concat( Animation.tweeners[ "*" ] ),
 		index = 0,
 		length = collection.length;
 	for ( ; index < length; index++ ) {
+
 		if ( ( tween = collection[ index ].call( animation, prop, value ) ) ) {
 
 			// We're done with this property
@@ -264,6 +267,7 @@ function propFilter( props, specialEasing ) {
 			delete props[ index ];
 		}
 
+		// 特殊css的处理了
 		hooks = jQuery.cssHooks[ name ];
 		if ( hooks && "expand" in hooks ) {
 			value = hooks.expand( value );
@@ -283,16 +287,21 @@ function propFilter( props, specialEasing ) {
 	}
 }
 
+// Animation主函数
 function Animation( elem, properties, options ) {
 	var result,
 		stopped,
 		index = 0,
 		length = Animation.prefilters.length,
+
+		// tuoles[[notify, progress],[resolve,done,list-once,list-once],[reject,fail,list-once,list-once]] donelist faillist add this func!
 		deferred = jQuery.Deferred().always( function() {
 
 			// Don't match elem in the :animated selector
 			delete tick.elem;
 		} ),
+
+		// 根据时间计算step，并给tween执行
 		tick = function() {
 			if ( stopped ) {
 				return false;
@@ -368,6 +377,7 @@ function Animation( elem, properties, options ) {
 		} ),
 		props = animation.props;
 
+	// 格式化props和specialEasing
 	propFilter( props, animation.opts.specialEasing );
 
 	for ( ; index < length; index++ ) {
@@ -381,6 +391,7 @@ function Animation( elem, properties, options ) {
 		}
 	}
 
+	// createTween(props[name], name, animation)生成执行的方法
 	jQuery.map( props, createTween, animation );
 
 	if ( typeof animation.opts.start === "function" ) {
@@ -394,6 +405,7 @@ function Animation( elem, properties, options ) {
 		.fail( animation.opts.fail )
 		.always( animation.opts.always );
 
+	// timer.push and timer.fx.start
 	jQuery.fx.timer(
 		jQuery.extend( tick, {
 			elem: elem,
@@ -445,6 +457,7 @@ jQuery.Animation = jQuery.extend( Animation, {
 	}
 } );
 
+// getoptallc参数return {duration,easing,queue,old,complete}
 jQuery.speed = function( speed, easing, fn ) {
 	var opt = speed && typeof speed === "object" ? jQuery.extend( {}, speed ) : {
 		complete: fn || !fn && easing ||
@@ -498,6 +511,13 @@ jQuery.fn.extend( {
 			// Animate to the value specified
 			.end().animate( { opacity: to }, speed, easing, callback );
 	},
+
+	// jQuery动画
+	/**
+	 * 1.处理入参
+	 * 2.生产tween执行器；添加cb，
+	 * 3.一个 and tick执行，tick利用requestAnimationFrame循环执行：时间与durations形成的中间值
+	 *////////
 	animate: function( prop, speed, easing, callback ) {
 		var empty = jQuery.isEmptyObject( prop ),
 			optall = jQuery.speed( speed, easing, callback ),
@@ -518,6 +538,8 @@ jQuery.fn.extend( {
 			this.each( doAnimation ) :
 			this.queue( optall.queue, doAnimation );
 	},
+
+	//
 	stop: function( type, clearQueue, gotoEnd ) {
 		var stopQueue = function( hooks ) {
 			var stop = hooks.stop;
@@ -637,6 +659,8 @@ jQuery.each( {
 } );
 
 jQuery.timers = [];
+
+// 集中处理tick
 jQuery.fx.tick = function() {
 	var timer,
 		i = 0,
@@ -665,6 +689,8 @@ jQuery.fx.timer = function( timer ) {
 };
 
 jQuery.fx.interval = 13;
+
+// 一个防抖开关
 jQuery.fx.start = function() {
 	if ( inProgress ) {
 		return;
